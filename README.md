@@ -6,7 +6,7 @@ Executável para Windows com automação.
 Download: https://renatobrunogo.github.io/autocleanersite/
 
 
-    Versão: 1.4.4
+    Versão: 1.4.8
 
         ✅ Adicionar e remover pastas personalizadas.
 
@@ -60,7 +60,7 @@ Download: https://renatobrunogo.github.io/autocleanersite/
             │       └── autocleaner-off.ico
             │
             ├── dist/
-            │   └── autocleaner-v1.2.2.exe
+            │   └── autocleaner-v0.0.0.exe
 
 
             

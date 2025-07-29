@@ -3,11 +3,12 @@ import tkinter.ttk as ttk
 import sys
 import os
 import threading
+import ctypes
 from tkinter import filedialog, messagebox
 from analyzer import TempAnalyzer
 from cleaner import limpar_pasta
 from scheduler import Scheduler
-from paths_config import carregar_pastas, adicionar_pasta, remover_pasta  # Usar funções do paths_config
+from paths_config import carregar_pastas, adicionar_pasta, remover_pasta
 
 def recurso_caminho(rel_path):
     try:
@@ -113,12 +114,40 @@ def limpeza_automatica():
     scheduler.parar()
     mostrar_confirmacao_limpeza_automatica(callback_limpar, callback_cancelar)
 
+def piscar_icone_janela(janela):
+    if sys.platform == "win32":
+        hwnd = janela.winfo_id()
+
+        FLASHW_ALL = 3
+        FLASHW_TIMERNOFG = 12
+
+        class FLASHWINFO(ctypes.Structure):
+            _fields_ = [("cbSize", ctypes.c_uint),
+                        ("hwnd", ctypes.c_void_p),
+                        ("dwFlags", ctypes.c_uint),
+                        ("uCount", ctypes.c_uint),
+                        ("dwTimeout", ctypes.c_uint)]
+
+        info = FLASHWINFO(
+            ctypes.sizeof(FLASHWINFO),
+            hwnd,
+            FLASHW_ALL | FLASHW_TIMERNOFG,
+            10,
+            0
+        )
+
+        ctypes.windll.user32.FlashWindowEx(ctypes.byref(info))
+
 def mostrar_confirmacao_limpeza_automatica(callback_limpar, callback_cancelar):
     confirm_win = tk.Toplevel(root)
-    confirm_win.title("Confirmar limpeza automática")
+    confirm_win.title("Aviso AutoCleaner")
     confirm_win.configure(bg="#f5f5f5")
-    confirm_win.grab_set()  # Bloqueia a janela principal
+    confirm_win.grab_set()
     confirm_win.iconbitmap(recurso_caminho("assets/autocleaner-off.ico"))
+    confirm_win.transient(None)
+    confirm_win.attributes('-topmost', True)
+    confirm_win.attributes('-topmost', False)
+
 
     centralizar_janela(confirm_win, 420, 200)
 
@@ -147,7 +176,9 @@ def mostrar_confirmacao_limpeza_automatica(callback_limpar, callback_cancelar):
     frame_botoes.pack(pady=20)
 
     tk.Button(frame_botoes, text="Limpar agora", bg="#3d518d", fg="white", width=16, command=on_confirm).pack(side="left", padx=10)
-    tk.Button(frame_botoes, text="Não limpar agora", bg="#d9534f", fg="white", width=16, command=on_cancel).pack(side="right", padx=10)
+    tk.Button(frame_botoes, text="Não limpar agora", bg="#e77972", fg="white", width=16, command=on_cancel).pack(side="right", padx=10)
+
+    confirm_win.after(150, lambda: piscar_icone_janela(confirm_win))
 
 # --- Funções para manipular lista de pastas usando paths_config ---
 def atualizar_lista_pastas():
@@ -161,7 +192,7 @@ def adicionar_nova_pasta():
     pasta = filedialog.askdirectory()
     if pasta:
         pasta_abs = os.path.abspath(pasta)
-        adicionar_pasta(pasta_abs)  # Já salva no JSON na pasta AppData
+        adicionar_pasta(pasta_abs)
         atualizar_lista_pastas()
 
 def remover_pastas_selecionadas():
@@ -170,13 +201,12 @@ def remover_pastas_selecionadas():
         messagebox.showinfo("Aviso", "Selecione uma ou mais pastas para remover.")
         return
 
-    selecionadas.reverse()  # Remove da lista de baixo para cima para não bagunçar índices
+    selecionadas.reverse()
     for i in selecionadas:
         pasta = lista_pastas.get(i)
-        remover_pasta(pasta)  # Já salva no JSON na pasta AppData
+        remover_pasta(pasta)
         lista_pastas.delete(i)
 
-    # Não precisa salvar manualmente, pois remover_pasta já faz isso
 
 class ToolTip:
     def __init__(self, widget, text):
@@ -200,8 +230,8 @@ class ToolTip:
             tw,
             text=self.text,
             justify='center',
-            background="#6a81c5",     # branco suave
-            foreground="#f5f5f5",     # texto escuro neutro
+            background="#6a81c5",
+            foreground="#f5f5f5",
             relief='flat',
             #borderwidth=3,
             font=("Segoe UI", 9),
@@ -219,7 +249,7 @@ class ToolTip:
 
 # --- Interface gráfica ---
 root = tk.Tk()
-root.title("A u t o C l e a n e r  –  Limpeza Inteligente  1.4.4")
+root.title("A u t o C l e a n e r  –  Limpeza Inteligente  1.4.8")
 centralizar_janela(root, 800, 600)
 root.configure(bg='#f5f5f5')
 root.iconbitmap(recurso_caminho("assets/autocleaner-off.ico"))

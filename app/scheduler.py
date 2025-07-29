@@ -4,10 +4,10 @@ import time
 class Scheduler:
     def __init__(self, callback, intervalo_minutos=60):
         self.callback = callback
-        self.intervalo = intervalo_minutos * 60  # segundos
+        self.intervalo = intervalo_minutos * 60
         self.thread = None
         self.running = False
-        self.contagem_callback = None  # função para atualizar o contador na interface
+        self.contagem_callback = None
 
     def iniciar(self):
         if not self.running:
@@ -19,7 +19,7 @@ class Scheduler:
         while self.running:
             for i in range(self.intervalo, 0, -1):
                 if not self.running:
-                    return  # Encerra imediatamente se parar
+                    return
 
                 if self.contagem_callback:
                     mins, secs = divmod(i, 60)
