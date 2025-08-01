@@ -25,7 +25,7 @@ Download: https://renatobrunogo.github.io/autocleanersite/
         
         Observações
             Todos os arquivos e subpastas das pastas selecionadas são deletados definitivamente;
-            A limpeza automática não executa em segundo plano com o app fechado (não é um serviço de sistema).
+            A limpeza automática não executa em segundo plano com o app fechado (não é um serviço).
 
 
         Skills
