@@ -1,32 +1,17 @@
-# Build artifacts
 build/
 dist/
 *.spec
-
-# Executáveis gerados
 *.exe
-
-# Arquivos temporários
 estrutura.txt
 user_paths.json
-
-# Python cache
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-
-# VSCode Ruby LSP extension
 .ruby-lsp/
-
-# Logs e arquivos pessoais (ajuste conforme necessário)
 *.log
-
-# Ambientes virtuais (caso use um)
 venv/
 .env/
 .envrc
-
-# Sistema operacional
 .DS_Store
 Thumbs.db
