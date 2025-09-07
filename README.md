@@ -1,6 +1,6 @@
 A u t o C l e a n e r  -  Limpeza inteligente
 
-Executável para Windows com automação.
+Executável para Windows, com automação.
 
 
 Download: https://renatobrunogo.github.io/autocleanersite/
